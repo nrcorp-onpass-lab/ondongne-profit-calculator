@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>온동네 가격·수익 비교 — 발표용 슬라이드</title>
+<style>
+  :root{
+    --bg:#F7F3EA;--ink:#161616;--gray:#5B5B5B;--foot:#8A8376;--coral:#FF4B22;--coraldk:#C25B3F;
+    --dark:#14352F;--teal:#0B7A75;--tint:#ECFFFC;--green:#13A66B;--cream:#FBF7EE;--line:#E2D9C6;--hilite:#EFF8F6;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  html,body{height:100%;background:#2a2a2a;font-family:'Malgun Gothic','맑은 고딕',-apple-system,system-ui,sans-serif;}
+  #fit{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;overflow:hidden;}
+  .stage{width:1280px;height:720px;background:var(--bg);position:relative;transform-origin:center center;
+    padding:34px 46px 22px;color:var(--ink);}
+  /* header */
+  .eyebrow{display:flex;align-items:center;gap:8px;color:var(--coral);font-weight:800;font-size:13px;letter-spacing:.04em;}
+  .eyebrow::before{content:"";width:24px;height:3px;background:var(--coral);border-radius:2px;}
+  h1{font-size:30px;font-weight:800;margin:7px 0 3px;}
+  .lede{font-size:14px;color:var(--gray);display:flex;align-items:center;gap:6px;flex-wrap:wrap;}
+  .seg{display:inline-flex;gap:4px;margin-left:auto;}
+  .seg button{padding:3px 11px;border:1px solid var(--line);background:#fff;border-radius:7px;font-size:13px;font-weight:800;color:var(--gray);cursor:pointer;font-family:inherit;}
+  .seg button.on{background:var(--ink);color:#fff;border-color:var(--ink);}
+  .topline{display:flex;align-items:flex-end;gap:14px;}
+  /* editable inputs */
+  .ed{border:none;border-bottom:1.6px dashed var(--coraldk);background:#FFF4EC;color:var(--ink);
+    font-weight:800;text-align:center;font-family:inherit;border-radius:5px 5px 0 0;padding:1px 5px;font-size:14px;}
+  .ed::-webkit-outer-spin-button,.ed::-webkit-inner-spin-button{-webkit-appearance:none;margin:0;}
+  .ed{ -moz-appearance:textfield;}
+  /* fee bar */
+  .feebar{margin-top:12px;background:var(--dark);border-radius:12px;padding:11px 20px;color:#fff;
+    display:flex;flex-direction:column;gap:7px;}
+  .feerow{display:grid;grid-template-columns:78px 132px 86px 1fr;align-items:center;gap:12px;font-size:13.5px;}
+  .feerow .tag{font-weight:800;font-size:14px;}
+  .feerow .big{font-weight:800;font-size:18px;}
+  .feerow .det{color:#CFE7E3;}
+  .feerow .detwrap{display:flex;align-items:center;gap:10px;}
+  .feerow .b2{color:#FFC96B;} .feerow .od{color:#7FE6DC;}
+  .feerow .adwrap{margin-left:auto;display:flex;align-items:center;gap:6px;font-size:12.5px;color:#CFE7E3;}
+  .feebar select{background:#244A43;color:#fff;border:1px solid #3a615a;border-radius:6px;font-family:inherit;font-size:13px;font-weight:800;padding:2px 6px;cursor:pointer;}
+  .feebar select.odsel{color:#7FE6DC;}
+  .feebar .edd{border:none;border-bottom:1.6px dashed #7FE6DC;background:#244A43;color:#fff;font-weight:800;text-align:center;font-family:inherit;border-radius:5px 5px 0 0;padding:1px 5px;font-size:13px;}
+  .feebar .edd::-webkit-outer-spin-button,.feebar .edd::-webkit-inner-spin-button{-webkit-appearance:none;margin:0;}
+  .feebar .ed{font-size:13px;background:#244A43;border-bottom-color:#7FE6DC;color:#fff;}
+  .feebar select{background:#244A43;color:#fff;border:1px solid #3a615a;border-radius:6px;font-family:inherit;font-size:13px;font-weight:800;padding:1px 4px;cursor:pointer;}
+  .feebar select.odsel{color:#7FE6DC;}
+  /* table */
+  table{width:100%;border-collapse:collapse;margin-top:12px;font-size:13px;}
+  th,td{padding:7px 6px;text-align:center;border-bottom:1px solid var(--line);}
+  thead th{background:var(--dark);color:#fff;font-size:11px;font-weight:700;line-height:1.25;border-bottom:none;}
+  thead th:first-child{border-radius:8px 0 0 0;} thead th:last-child{border-radius:0 8px 0 0;}
+  td.lab{font-weight:800;color:var(--gray);}
+  td.od{background:var(--tint);color:var(--teal);font-weight:800;}
+  th.od{background:#0B5C58;color:#fff;}
+  .hl{background:var(--hilite);color:var(--green);font-weight:800;}
+  th.hl{background:#176B53;color:#fff;}
+  .sub{font-size:10px;color:var(--foot);font-weight:600;}
+  tr.selN td{box-shadow:inset 0 0 0 2px #0B7A75;}
+  /* stat cards */
+  .cards{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:13px;}
+  .card{background:#fff;border:1px solid var(--line);border-radius:12px;padding:11px 14px;}
+  .card .t{font-size:11.5px;color:var(--gray);display:flex;align-items:center;gap:4px;flex-wrap:wrap;}
+  .card .n{font-size:23px;font-weight:800;margin-top:5px;}
+  .card .t .ed{font-size:12px;padding:0 4px;}
+  .teal{color:var(--teal);} .coral{color:var(--coraldk);}
+  /* footer */
+  .src{margin-top:12px;font-size:10.5px;color:var(--foot);line-height:1.6;}
+  .src b{color:var(--coraldk);}
+  .hintbar{position:absolute;left:46px;bottom:6px;font-size:10px;color:#B7AE99;}
+</style>
+</head>
+<body>
+<div id="fit">
+  <div class="stage" id="stage">
+    <div class="eyebrow">가격·수익 비교 · 한집배달 기준</div>
+    <div class="topline">
+      <div>
+        <h1>온동네는 개당 <b id="cutEcho" style="color:var(--coral)">300원</b> 깎아도, 가맹점에 더 남는다</h1>
+        <div class="lede">한집배달이든 알뜰배달이든 — 빅2는 수수료·배달비·광고비 부담이 커, 온동네가 더 남는다 (부가세 포함 기준)</div>
+      </div>
+      <div class="seg" id="segN">
+        <button data-n="2" class="on">2개</button><button data-n="3">3개</button><button data-n="4">4개</button><button data-n="5">5개</button>
+      </div>
+    </div>
+
+    <div class="feebar">
+      <div class="feerow">
+        <span class="tag b2">빅2</span>
+        <select id="bmode2"><option value="한집배달" selected>한집배달</option><option value="알뜰배달">알뜰배달</option></select>
+        <span class="big b2" id="bRateL">11.88%</span>
+        <div class="detwrap">
+          <span class="det">중개 8.58% + 결제 3.30% · 점주 배달비 <span id="bdelL">3,400원</span></span>
+          <span class="adwrap" style="margin-left:auto;display:flex;align-items:center;gap:6px;color:#CFE7E3;">월 광고비 <input class="edd" id="bad" type="text" inputmode="numeric" data-comma value="150,000" style="width:84px"> 원
+            <span id="adper" style="color:#9FBFB9"></span></span>
+        </div>
+      </div>
+      <div class="feerow">
+        <span class="tag od">온동네</span>
+        <select id="tier" class="odsel">
+          <option value="영세">영세 2.0%</option><option value="중소1">중소1 2.6%</option>
+          <option value="중소2" selected>중소2 2.8%</option><option value="중소3">중소3 2.9%</option>
+          <option value="일반">일반 3.0%</option></select>
+        <span class="big od" id="onRateL">7.48%</span>
+        <div class="detwrap">
+          <span class="det">중개 4.40% + PG <span id="pgL">3.08%</span> · 배달비 <input class="edd" id="odel" type="text" inputmode="numeric" data-comma value="3,000" style="width:64px"> 원</span>
+          <span class="adwrap" style="margin-left:auto;font-size:11.5px;color:#9FBFB9;">실질 수수료 · 부가세 포함 기준</span>
+        </div>
+      </div>
+    </div>
+
+    <table>
+      <thead>
+        <tr>
+          <th>메뉴 수</th>
+          <th>소비자가<br>빅2</th><th class="od">소비자가<br>온동네</th><th class="hl">소비자 절약<br>(개당 <input class="ed" id="cut" type="text" inputmode="numeric" data-comma value="300" style="width:54px">원)</th>
+          <th>가맹수익<br>빅2</th><th class="od">가맹수익<br>온동네</th><th class="hl">차액<br>온동네−빅2</th>
+        </tr>
+      </thead>
+      <tbody id="tbody"></tbody>
+    </table>
+
+    <div class="cards">
+      <div class="card">
+        <div class="t">일 추가 수익 (<span id="nlab1">2</span>개 주문)</div>
+        <div class="t" style="margin-top:4px;gap:6px;">일 <input class="ed" id="opd" type="text" inputmode="numeric" data-comma value="30" style="width:54px"> 건 기준</div>
+        <div class="n teal" id="dayAdd" style="margin-top:4px;">—</div>
+      </div>
+      <div class="card">
+        <div class="t">월 추가 수익 (30일 환산)</div>
+        <div class="n teal" id="monAdd">—</div>
+      </div>
+      <div class="card">
+        <div class="t">추천 월 페이백 (2%)</div>
+        <div class="t" style="margin-top:4px;gap:6px;">
+          <input class="ed" id="rc" type="text" inputmode="numeric" data-comma value="300" style="width:54px">명 ·
+          <input class="ed" id="ro" type="text" inputmode="numeric" data-comma value="4" style="width:38px">회 ·
+          <input class="ed" id="rv" type="text" inputmode="numeric" data-comma value="25,000" style="width:64px">원</div>
+        <div class="n coral" id="recM" style="margin-top:4px;">—</div>
+      </div>
+      <div class="card">
+        <div class="t">추천 연 환산 페이백</div>
+        <div class="n coral" id="recY">—</div>
+      </div>
+    </div>
+
+    <div class="src">
+      <b>근거 · 가정</b>　객단가 25,000원 = 단가 12,500원 × 2개 (와이즈앱 2025.3 월평균 3.7회 · 배달 호출데이터 건당 22,711원 · 설문 "건당 2~3만원" 46.6%)<br>
+      빅2(배민·쿠팡이츠 통합): 배민배달 상생요금제 상위구간 중개 7.8%→8.58% + 결제 3%→3.3% · 점주 배달비 한집 3,400원·알뜰(묶음) 2,500원 · 우리가게클릭 월 광고비(주문당 환산 차감). 쿠팡이츠도 동일 상생요금제(중개 2~7.8%·배달비 1,900~3,400원)<br>
+      온동네: 중개 4%→4.4% + PG 우대수수료(영세 2.0% ~ 일반 3.0%, VAT 별도 · 구간 선택 가능, 기본 중소2 5~10억) · 배달비 3,000원<br>일 주문 건수: 음식점 배달 일평균 약 32건 (한국외식산업연구원 외식산업 배달 실태조사) — 매장별 편차 큼, 조정 가능　|　추천 2% 페이백 = 추천 고객 × 월 주문 횟수 × 평균 주문액 × 2%
+    </div>
+    <div class="hintbar">주황색 칸을 바꾸면 표·수익·페이백이 즉시 갱신됩니다 · 전체화면(F11) 권장</div>
+  </div>
+</div>
+
+<script>
+const $=id=>document.getElementById(id);
+const won=v=>Math.round(v).toLocaleString('ko-KR')+'원';
+// 고정 (한집배달)
+const price=12500, bRate=(8.58+3.3)/100;
+const PGT={'영세':2.0,'중소1':2.6,'중소2':2.8,'중소3':2.9,'일반':3.0};
+const BDEL2={'한집배달':3400,'알뜰배달':2500};
+let N=2;
+function calc(){
+  const cut=pnum('cut'), opd=Math.max(1,pnum('opd')), bad=pnum('bad');
+  const rc=pnum('rc'), ro=pnum('ro'), rv=pnum('rv');
+  const pgBase=PGT[$('tier').value], pg=pgBase*1.1, onRate=(4.4+pg)/100;
+  const bdel=BDEL2[$('bmode2').value], odel=pnum('odel');
+  $('onRateL').textContent=(onRate*100).toFixed(2)+'%';
+  $('pgL').textContent=pg.toFixed(2)+'%';
+  $('bdelL').textContent=won(bdel);
+  const ad=bad/(opd*30);
+  $('adper').textContent='→ 주문당 '+won(ad);
+  $('cutEcho').textContent=cut.toLocaleString('ko-KR')+'원';
+  const bigp=n=>price*n, ondp=n=>(price-cut)*n;
+  const bignet=n=>bigp(n)*(1-bRate)-bdel-ad, ondnet=n=>ondp(n)*(1-onRate)-odel;
+  // table
+  let h='';
+  [2,3,4,5].forEach(n=>{
+    const sav=bigp(n)-ondp(n), bn=bignet(n), on=ondnet(n), d=on-bn, per=d/n;
+    h+=`<tr class="${n===N?'selN':''}" style="cursor:pointer" onclick="selN(${n})">
+      <td class="lab">${n}개</td>
+      <td>${won(bigp(n))}</td><td class="od">${won(ondp(n))}</td>
+      <td class="hl">${won(sav)}</td>
+      <td>${won(bn)}</td><td class="od">${won(on)}</td>
+      <td class="hl">${d>=0?'+':''}${won(d)}</td>
+    </tr>`;
+  });
+  $('tbody').innerHTML=h;
+  // stat
+  const per=ondnet(N)-bignet(N), day=per*opd, mon=day*30;
+  $('nlab1').textContent=N;
+  $('dayAdd').textContent=(day>=0?'+':'')+won(day);
+  $('monAdd').textContent=(mon>=0?'+':'')+won(mon);
+  const gmv=rc*ro*rv, recM=gmv*0.02;
+  $('recM').textContent=won(recM);
+  $('recY').textContent=won(recM*12);
+}
+function selN(n){
+  N=n;
+  document.querySelectorAll('#segN button').forEach(x=>x.classList.toggle('on',+x.dataset.n===n));
+  calc();
+}
+document.querySelectorAll('#segN button').forEach(b=>b.onclick=()=>selN(+b.dataset.n));
+function pnum(id){return Number(($(id).value||'').toString().replace(/[^0-9.]/g,''))||0;}
+function fmtComma(el){const raw=el.value.replace(/[^0-9]/g,'');el.value=raw===''?'':Number(raw).toLocaleString('ko-KR');}
+document.querySelectorAll('input').forEach(el=>el.addEventListener('input',()=>{ if(el.dataset.comma!==undefined) fmtComma(el); calc(); }));
+document.querySelectorAll('select').forEach(el=>el.addEventListener('change',calc));
+// 화면 맞춤 스케일
+function fit(){
+  const s=Math.min(window.innerWidth/1280, window.innerHeight/720);
+  $('stage').style.transform='scale('+s+')';
+}
+window.addEventListener('resize',fit);
+calc(); fit();
+</script>
+</body>
+</html>
