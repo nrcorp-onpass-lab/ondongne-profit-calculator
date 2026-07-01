@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>재구매 유도형 프로모션 설계 — UI 목업</title>
+<style>
+  :root{
+    --bg:#F3F4F6; --card:#FFFFFF; --line:#E5E7EB; --line2:#EEF0F3;
+    --ink:#1F2937; --sub:#6B7280; --mut:#9CA3AF;
+    --navy:#1E2A44; --navy-soft:#F5F7FB; --navy-line:#1E2A44;
+    --red:#EF4444; --field:#FCFCFD;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{background:var(--bg);color:var(--ink);
+    font-family:'Malgun Gothic','맑은 고딕',-apple-system,system-ui,sans-serif;
+    -webkit-font-smoothing:antialiased;padding:32px 24px 80px;}
+  .page{max-width:1360px;margin:0 auto;}
+
+  /* breadcrumb */
+  .crumbs{display:flex;align-items:center;justify-content:space-between;font-size:13px;color:var(--mut);margin-bottom:14px;}
+  .crumbs .path span{color:var(--mut);}
+  .crumbs .path b{color:var(--ink);font-weight:700;}
+  .crumbs .path i{font-style:normal;margin:0 7px;color:#CBD0D8;}
+  .crumbs .pg{color:var(--mut);font-variant-numeric:tabular-nums;}
+
+  h1{font-size:28px;font-weight:800;letter-spacing:-.01em;margin-bottom:22px;}
+
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;}
+
+  /* merchant */
+  .merchant{padding:20px 24px;display:flex;align-items:center;gap:16px;margin-bottom:16px;}
+  .merchant .dot{width:9px;height:9px;border-radius:50%;background:var(--red);flex:none;box-shadow:0 0 0 4px #FEE9E9;}
+  .merchant .who .nm{font-size:16px;font-weight:800;}
+  .merchant .who .meta{font-size:12.5px;color:var(--sub);margin-top:3px;}
+  .merchant .search{margin-left:auto;display:flex;align-items:center;gap:8px;}
+  .sel,.inp{height:40px;border:1px solid var(--line);border-radius:9px;background:var(--field);
+    font-family:inherit;font-size:13.5px;color:var(--ink);padding:0 12px;}
+  .sel{min-width:120px;color:var(--sub);appearance:none;background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%239CA3AF' stroke-width='2'><path d='M6 9l6 6 6-6'/></svg>");background-repeat:no-repeat;background-position:right 11px center;padding-right:30px;cursor:pointer;}
+  .inp{width:230px;}
+  .inp::placeholder{color:var(--mut);}
+  .btn-dark{height:40px;padding:0 18px;border:none;border-radius:9px;background:var(--navy);color:#fff;
+    font-family:inherit;font-size:13.5px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:7px;white-space:nowrap;}
+  .btn-dark:hover{background:#16203a;}
+
+  /* section */
+  .sect{padding:24px 24px 26px;margin-bottom:16px;}
+  .sect-head{display:flex;align-items:center;gap:11px;margin-bottom:18px;}
+  .num{width:26px;height:26px;border-radius:50%;background:var(--navy);color:#fff;font-size:13px;font-weight:800;
+    display:flex;align-items:center;justify-content:center;flex:none;}
+  .sect-head .t{font-size:16px;font-weight:800;}
+  .sect-head .d{font-size:13px;color:var(--mut);}
+  .flabel{font-size:13px;font-weight:700;color:#374151;margin-bottom:9px;display:block;}
+  .flabel .req{color:var(--red);margin-left:2px;}
+
+  .titlewrap{position:relative;}
+  .titlewrap .field{width:100%;height:48px;border:1px solid var(--line);border-radius:10px;background:var(--field);
+    font-family:inherit;font-size:14.5px;padding:0 74px 0 16px;color:var(--ink);}
+  .titlewrap .field:focus{outline:none;border-color:var(--navy);background:#fff;}
+  .titlewrap .field::placeholder{color:var(--mut);}
+  .counter{position:absolute;right:14px;top:50%;transform:translateY(-50%);font-size:12.5px;color:var(--mut);font-variant-numeric:tabular-nums;}
+
+  /* radio cards */
+  .opts{display:grid;gap:14px;}
+  .opts.c3{grid-template-columns:repeat(3,1fr);}
+  .opts.c5{grid-template-columns:repeat(5,1fr);align-items:start;}
+  .optwrap{display:flex;flex-direction:column;gap:10px;}
+  .opt{border:1.5px solid var(--line);border-radius:12px;background:#fff;padding:16px 16px;cursor:pointer;
+    display:flex;align-items:flex-start;gap:11px;transition:border-color .15s, background .15s, box-shadow .15s;min-height:78px;}
+  .opt:hover{border-color:#C6CBD3;}
+  .opt .radio{width:19px;height:19px;border:2px solid #C4C9D2;border-radius:50%;flex:none;margin-top:1px;position:relative;transition:border-color .15s;}
+  .opt .body .ic{font-size:14px;}
+  .opt .body .lb{font-size:14.5px;font-weight:700;display:flex;align-items:center;gap:6px;}
+  .opt .body .sub{font-size:12px;color:var(--mut);margin-top:5px;line-height:1.4;}
+  .opt.on{border-color:var(--navy);background:var(--navy-soft);box-shadow:0 0 0 1px var(--navy) inset;}
+  .opt.on .radio{border-color:var(--navy);}
+  .opt.on .radio::after{content:"";position:absolute;inset:3px;border-radius:50%;background:var(--navy);}
+
+  /* conditional input under a card */
+  .cond{border:1px solid var(--line);border-radius:11px;background:var(--field);padding:13px 14px;
+    display:none;}
+  .cond.show{display:block;animation:pop .18s ease;}
+  @keyframes pop{from{opacity:0;transform:translateY(-4px);}to{opacity:1;transform:none;}}
+  .cond .cl{font-size:12px;font-weight:700;color:#374151;margin-bottom:8px;}
+  .cond .row{display:flex;align-items:center;gap:8px;}
+  .cond .row input{flex:1;height:38px;min-width:0;border:1px solid var(--line);border-radius:8px;background:#fff;
+    font-family:inherit;font-size:14px;text-align:right;padding:0 10px;color:var(--ink);font-variant-numeric:tabular-nums;}
+  .cond .row input:focus{outline:none;border-color:var(--navy);}
+  .cond .row .unit{font-size:12.5px;color:var(--sub);white-space:nowrap;}
+  .cond.note .ntxt{font-size:12.5px;color:var(--sub);line-height:1.55;}
+
+  .hint{margin-top:22px;font-size:12px;color:var(--mut);text-align:center;}
+  @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;}}
+</style>
+</head>
+<body>
+<div class="page">
+
+  <div class="crumbs">
+    <div class="path"><span>홈</span><i>›</i><span>가맹점관리</span><i>›</i><span>이벤트 관리</span><i>›</i><b>이벤트 설정 및 등록</b></div>
+    <div class="pg">02 / 03</div>
+  </div>
+
+  <h1>재구매 유도형 프로모션 설계</h1>
+
+  <!-- merchant -->
+  <div class="card merchant">
+    <span class="dot"></span>
+    <div class="who">
+      <div class="nm">나름 운영팀 테스트가맹점</div>
+      <div class="meta">[9027] 서울 은평구 로컬 프랜차이즈점 · 6495476</div>
+    </div>
+    <div class="search">
+      <select class="sel"><option>가맹점명</option><option>가맹점번호</option><option>대표자명</option></select>
+      <input class="inp" placeholder="가맹점 검색">
+      <button class="btn-dark">🔍 가맹점 검색</button>
+    </div>
+  </div>
+
+  <!-- 1 이벤트 제목 -->
+  <div class="card sect">
+    <div class="sect-head"><span class="num">1</span><span class="t">이벤트 제목</span><span class="d">이벤트 이름을 입력하세요</span></div>
+    <label class="flabel">이벤트 제목<span class="req">*</span></label>
+    <div class="titlewrap">
+      <input id="title" class="field" maxlength="67" placeholder="예) 봄맞이 특별 할인 이벤트">
+      <span class="counter"><b id="tcount">0</b> / 67</span>
+    </div>
+  </div>
+
+  <!-- 2 주문 유형 -->
+  <div class="card sect">
+    <div class="sect-head"><span class="num">2</span><span class="t">주문 유형</span><span class="d">주문 유형을 선택하세요</span></div>
+    <label class="flabel">주문 유형<span class="req">*</span></label>
+    <div class="opts c3" id="orderType">
+      <div class="opt on" data-val="all"><span class="radio"></span><div class="body"><div class="lb"><span class="ic">🗂️</span>전체</div><div class="sub">배달, 포장 주문 모두 적용</div></div></div>
+      <div class="opt" data-val="delivery"><span class="radio"></span><div class="body"><div class="lb"><span class="ic">🛵</span>배달</div><div class="sub">배달 주문 적용</div></div></div>
+      <div class="opt" data-val="pickup"><span class="radio"></span><div class="body"><div class="lb"><span class="ic">🛍️</span>포장</div><div class="sub">포장 주문 적용</div></div></div>
+    </div>
+  </div>
+
+  <!-- 3 할인 조건 -->
+  <div class="card sect">
+    <div class="sect-head"><span class="num">3</span><span class="t">할인 조건</span><span class="d">고객 행동 및 주문 조건에 따라 적용할 할인 혜택을 선택하세요</span></div>
+    <label class="flabel">할인 조건<span class="req">*</span></label>
+    <div class="opts c5" id="discountType">
+
+      <div class="optwrap">
+        <div class="opt on" data-val="first"><span class="radio"></span><div class="body"><div class="lb"><span class="ic">🏠</span>첫 주문 할인</div><div class="sub">내 상점에 첫 주문 시 할인</div></div></div>
+        <div class="cond note show" data-cond="first">
+          <div class="cl">적용 안내</div>
+          <div class="ntxt">내 상점 첫 주문 시 자동 적용됩니다.<br>별도 입력값이 없습니다.</div>
+        </div>
+      </div>
+
+      <div class="optwrap">
+        <div class="opt" data-val="amount"><span class="radio"></span><div class="body"><div class="lb"><span class="ic">💰</span>주문 금액별 할인</div><div class="sub">N원 이상 주문 시 할인</div></div></div>
+        <div class="cond" data-cond="amount">
+          <div class="cl">주문 금액</div>
+          <div class="row"><input inputmode="numeric" data-comma placeholder="0"><span class="unit">원 이상</span></div>
+        </div>
+      </div>
+
+      <div class="optwrap">
+        <div class="opt" data-val="nth"><span class="radio"></span><div class="body"><div class="lb"><span class="ic">🎫</span>지정회차 할인</div><div class="sub">N번째 주문 시 할인</div></div></div>
+        <div class="cond" data-cond="nth">
+          <div class="cl">지정 회차</div>
+          <div class="row"><input inputmode="numeric" data-comma placeholder="0"><span class="unit">번째</span></div>
+        </div>
+      </div>
+
+      <div class="optwrap">
+        <div class="opt" data-val="count"><span class="radio"></span><div class="body"><div class="lb"><span class="ic">📊</span>누적 횟수 할인</div><div class="sub">N회 이상 주문한 고객 할인</div></div></div>
+        <div class="cond" data-cond="count">
+          <div class="cl">누적 횟수</div>
+          <div class="row"><input inputmode="numeric" data-comma placeholder="0"><span class="unit">회 이상</span></div>
+        </div>
+      </div>
+
+      <div class="optwrap">
+        <div class="opt" data-val="review"><span class="radio"></span><div class="body"><div class="lb"><span class="ic">⭐</span>리뷰 작성 할인</div><div class="sub">리뷰 등록 시 다음 주문 할인</div></div></div>
+        <div class="cond note" data-cond="review">
+          <div class="cl">적용 안내</div>
+          <div class="ntxt">리뷰 등록이 확인되면 다음 주문에<br>할인이 적용됩니다. 별도 입력값이 없습니다.</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="hint">라디오 카드를 클릭하면 선택 상태가 바뀌고, 할인 조건에 따라 입력칸이 나타납니다 · UI 목업</div>
+</div>
+
+<script>
+  // 라디오 그룹 (상호배타 선택)
+  function group(containerId, onSelect){
+    const box=document.getElementById(containerId);
+    box.querySelectorAll('.opt').forEach(opt=>{
+      opt.addEventListener('click',()=>{
+        box.querySelectorAll('.opt').forEach(o=>o.classList.remove('on'));
+        opt.classList.add('on');
+        onSelect && onSelect(opt.dataset.val);
+      });
+    });
+  }
+
+  group('orderType');
+
+  // 할인 조건: 선택에 따라 해당 조건부 입력칸만 표시
+  group('discountType', val=>{
+    document.querySelectorAll('#discountType .cond').forEach(c=>{
+      c.classList.toggle('show', c.dataset.cond===val);
+    });
+  });
+
+  // 이벤트 제목 글자수 카운터
+  const title=document.getElementById('title'), tc=document.getElementById('tcount');
+  title.addEventListener('input',()=>{ tc.textContent=title.value.length; });
+
+  // 숫자 입력 천단위 콤마
+  document.querySelectorAll('input[data-comma]').forEach(el=>{
+    el.addEventListener('input',()=>{
+      const raw=el.value.replace(/[^0-9]/g,'');
+      el.value = raw==='' ? '' : Number(raw).toLocaleString('ko-KR');
+    });
+  });
+</script>
+</body>
+</html>
