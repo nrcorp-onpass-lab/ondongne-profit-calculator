@@ -76,8 +76,8 @@
     <div class="eyebrow">가격·수익 비교 · 한집배달 기준</div>
     <div class="topline">
       <div>
-        <h1>온동네는 개당 <b id="cutEcho" style="color:var(--coral)">300원</b> 깎아도, 가맹점에 더 남는다</h1>
-        <div class="lede">한집배달이든 알뜰배달이든 — 빅2는 수수료·배달비·광고비 부담이 커, 온동네가 더 남는다 (부가세 포함 기준)</div>
+        <h1>온동네는 <b style="color:var(--coral)">고객 할인해도</b> 가맹점도 더 남는다</h1>
+        <div class="lede">빅2는 중개·결제·광고비까지 가맹 부담이 크다.</div>
       </div>
       <div class="seg" id="segN">
         <button data-n="2" class="on">2개</button><button data-n="3">3개</button><button data-n="4">4개</button><button data-n="5">5개</button>
@@ -90,7 +90,7 @@
         <select id="bmode2"><option value="한집배달" selected>한집배달</option><option value="알뜰배달">알뜰배달</option></select>
         <span class="big b2" id="bRateL">11.88%</span>
         <div class="detwrap">
-          <span class="det">중개 8.58% + 결제 3.30% · 점주 배달비 <span id="bdelL">3,400원</span></span>
+          <span class="det">중개 8.58% + 결제 3.30% · 배달비 <span id="bdelL">3,400원</span></span>
           <span class="adwrap" style="margin-left:auto;display:flex;align-items:center;gap:6px;color:#CFE7E3;">월 광고비 <input class="edd" id="bad" type="text" inputmode="numeric" data-comma value="150,000" style="width:84px"> 원
             <span id="adper" style="color:#9FBFB9"></span></span>
         </div>
@@ -103,7 +103,7 @@
           <option value="일반">일반 3.0%</option></select>
         <span class="big od" id="onRateL">7.48%</span>
         <div class="detwrap">
-          <span class="det">중개 4.40% + PG <span id="pgL">3.08%</span> · 배달비 <input class="edd" id="odel" type="text" inputmode="numeric" data-comma value="3,000" style="width:64px"> 원</span>
+          <span class="det">중개 4.40% + PG <span id="pgL">3.08%</span> · 배달비 <input class="edd" id="odel" type="text" inputmode="numeric" data-comma value="3,400" style="width:64px"> 원</span>
           <span class="adwrap" style="margin-left:auto;font-size:11.5px;color:#9FBFB9;">실질 수수료 · 부가세 포함 기준</span>
         </div>
       </div>
@@ -171,7 +171,6 @@ function calc(){
   $('bdelL').textContent=won(bdel);
   const ad=bad/(opd*30);
   $('adper').textContent='→ 주문당 '+won(ad);
-  $('cutEcho').textContent=cut.toLocaleString('ko-KR')+'원';
   const bigp=n=>price*n, ondp=n=>(price-cut)*n;
   const bignet=n=>bigp(n)*(1-bRate)-bdel-ad, ondnet=n=>ondp(n)*(1-onRate)-odel;
   // table
